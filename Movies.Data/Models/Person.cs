@@ -3,11 +3,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Movies.Data.Models
 {
+    // Enum for the role of the person
     public enum PersonRole
     {
         Actor,
         Director,
     }
+
+    // Class for the person entity in the database with the following properties:
     public class Person
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity), Key]
