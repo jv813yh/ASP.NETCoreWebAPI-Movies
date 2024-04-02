@@ -3,6 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Movies.Data.Interfaces;
 using Movies.Data.Repositories;
+using Movies.Api;
+using Movies.Api.Interfaces;
+using Movies.Api.Managers;
 
 
 // WebApplication creates instantiates,
@@ -23,11 +26,26 @@ builder.Services.AddDbContext<MoviesDbContext>(options =>
     .ConfigureWarnings(warnings => warnings.Ignore(CoreEventId.DetachedLazyLoadingWarning));
 });
 
+// Add the controllers to the services collection
+builder.Services.AddControllers();
+
 // Add the repositories to the services collection
 builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 
+// Add the AutoMapper to the services collection
+builder.Services.AddAutoMapper(typeof(AutoMapperConfigurationProfile));
 
+
+// Add the managers to the services collection
+builder.Services.AddScoped<IPersonManager, PersonManager>();
+
+
+
+// Build the application
 var app = builder.Build();
+
+// Endpoint routing is a middleware that maps the incoming HTTP requests to the endpoints
+app.MapControllers();
 
 //app.MapGet("/", () => "Hello World!");
 

@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Movies.Data.DbContexts;
+using Movies.Data.Interfaces;
+using Movies.Data.Models;
 
 namespace Movies.Data.Repositories
 {
-    internal class PersonRepository
+    public class PersonRepository : BaseRepository<Person>, IPersonRepository
     {
+        public PersonRepository(MoviesDbContext dbContext) : base(dbContext)
+        {
+        }
     }
 }
