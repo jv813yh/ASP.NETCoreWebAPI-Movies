@@ -6,6 +6,7 @@ using Movies.Data.Repositories;
 using Movies.Api;
 using Movies.Api.Interfaces;
 using Movies.Api.Managers;
+using System.Text.Json.Serialization;
 
 
 // WebApplication creates instantiates,
@@ -26,8 +27,12 @@ builder.Services.AddDbContext<MoviesDbContext>(options =>
     .ConfigureWarnings(warnings => warnings.Ignore(CoreEventId.DetachedLazyLoadingWarning));
 });
 
-// Add the controllers to the services collection
-builder.Services.AddControllers();
+
+// Add the controllers to the services collection and configure the JSON serializer to use string enums
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
 
 // Add the repositories to the services collection
 builder.Services.AddScoped<IPersonRepository, PersonRepository>();

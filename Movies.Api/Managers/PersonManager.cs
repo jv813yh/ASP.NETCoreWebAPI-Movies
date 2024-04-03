@@ -26,5 +26,25 @@ namespace Movies.Api.Managers
 
             return _mapper.Map<IList<PersonDTO>>(peopleList);
         }
+
+        // Async method to get a person by id from the database and return it
+        public async Task<PersonDTO?> GetPersonByIdAsync(uint id)
+        {
+            Person? person = await _personRepository.FindByIdAsync(id);
+
+            if (person == null)
+            {
+                return null;
+            }
+
+            return _mapper.Map<PersonDTO>(person);
+        }
+
+        public async Task<IList<PersonDTO>> GetAllPeopleAsync(PersonRole personRole, int page = 0, int pageSize = int.MaxValue)
+        {
+            IList<Person> peopleList = await _personRepository.GetAllPeopleAsync(personRole, page, pageSize);
+
+            return _mapper.Map<IList<PersonDTO>>(peopleList);
+        }
     }
 }

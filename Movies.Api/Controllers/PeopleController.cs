@@ -31,5 +31,23 @@ namespace Movies.Api.Controllers
 
             return Ok(listPerons);
         }
+
+        /// <summary>
+        /// Async method to get a person by id from the database and return it as a PersonDTO object on route /api/people/{_id}
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns> PersonDTO </returns>
+        [HttpGet("people/{_id}")]
+        public async Task<ActionResult<PersonDTO>> GetPersonByIdAsync(uint _id)
+        {
+            PersonDTO? person = await _personManager.GetPersonByIdAsync(_id);
+
+            if (person == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(person);
+        }
     }
 }

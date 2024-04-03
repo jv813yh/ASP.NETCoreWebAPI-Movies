@@ -13,10 +13,10 @@ namespace Movies.Data.Repositories
     public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : class
     {
         // DbContext for the database
-        private readonly MoviesDbContext _dbContext;
+        protected readonly MoviesDbContext _dbContext;
 
         // DbSet for the entity
-        private readonly DbSet<TEntity> _dbSet;
+        protected readonly DbSet<TEntity> _dbSet;
 
         public BaseRepository(MoviesDbContext dbContext)
         {

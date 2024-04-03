@@ -1,4 +1,5 @@
 ﻿using Movies.Api.DTOs;
+using Movies.Data.Models;
 
 namespace Movies.Api.Interfaces
 {
@@ -6,9 +7,11 @@ namespace Movies.Api.Interfaces
     {
         Task<IList<PersonDTO>> GetAllPeopleAsync();
 
+        Task<PersonDTO?> GetPersonByIdAsync(uint id);
+
+        Task<IList<PersonDTO>> GetAllPeopleAsync(PersonRole personRole, int page, int pageSize);
+
         /*
-        
-        Task<PersonDTO?> FindByIdAsync(uint id);
         
         Task<PersonDTO> InsertAsync(PersonDTO personDTO);
         

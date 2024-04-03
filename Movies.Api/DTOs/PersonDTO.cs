@@ -3,8 +3,10 @@ using System.Text.Json.Serialization;
 
 namespace Movies.Api.DTOs
 {
+    // Data Transfer Object (DTO) for the Person entity 
     public class PersonDTO
     {
+        [JsonPropertyName("_id")]
         public uint PersonId { get; set; }
         public string Name { get; set; } = "";
         public DateTime BirthDate { get; set; }
