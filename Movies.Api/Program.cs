@@ -7,6 +7,7 @@ using Movies.Api;
 using Movies.Api.Interfaces;
 using Movies.Api.Managers;
 using System.Text.Json.Serialization;
+using Microsoft.OpenApi.Models;
 
 
 // WebApplication creates instantiates,
@@ -34,6 +35,19 @@ builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
 
+// Add the OpenAPI/Swagger generator to the services collection
+builder.Services.AddEndpointsApiExplorer();
+
+// Add the OpenAPI/Swagger generator to the services collection
+builder.Services.AddSwaggerGen(options =>
+options.SwaggerDoc("movies", new OpenApiInfo 
+    { 
+        Version = "v1", 
+        Title = "Simple movie API",
+        Description = "Web API for movie database created by using ASP.NET technology",
+    })
+);
+
 // Add the repositories to the services collection
 builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 
@@ -45,13 +59,20 @@ builder.Services.AddAutoMapper(typeof(AutoMapperConfigurationProfile));
 builder.Services.AddScoped<IPersonManager, PersonManager>();
 
 
-
 // Build the application
 var app = builder.Build();
+
+//
+if(app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(options 
+        => options.SwaggerEndpoint("/swagger/movies/swagger.json", "Movies API - v1"));
+}
 
 // Endpoint routing is a middleware that maps the incoming HTTP requests to the endpoints
 app.MapControllers();
 
-//app.MapGet("/", () => "Hello World!");
+app.MapGet("/", () => "Welcome");
 
 app.Run();

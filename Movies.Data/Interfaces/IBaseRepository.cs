@@ -15,6 +15,10 @@
 
         Task DeleteAsync(uint id);
 
-        Task<bool> ExistsWithId(uint id);
+        Task<bool> ExistsWithIdAsync(uint id);
+
+        bool ExistsWithId(uint id);
+
+        TEntity? FindById(uint id);
     }
 }
