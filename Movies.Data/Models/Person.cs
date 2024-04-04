@@ -30,5 +30,11 @@ namespace Movies.Data.Models
 
         [Required]
         public PersonRole Role { get; set; }
+
+        // Navigation property for the many-to-many relationship between Person and Movie
+        public virtual List<Movie> MoviesAsDirector { get; set; } = new List<Movie>();
+
+        // Navigation property for the many-to-many relationship between Person and Movie
+        public virtual List<Movie> MoviesAsActor { get; set; } = new List<Movie>();
     }
 }

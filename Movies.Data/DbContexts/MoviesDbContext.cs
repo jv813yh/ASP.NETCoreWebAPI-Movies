@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Movies.Data.Models;
 
 namespace Movies.Data.DbContexts
@@ -7,6 +8,12 @@ namespace Movies.Data.DbContexts
     {
         // DbSet for the Person entity
         DbSet<Person> People { get; set; }
+
+        // DbSet for the Movie entity
+        DbSet<Movie> Movies { get; set; }
+
+        // DbSet for the Genre entity
+        DbSet<Genre> Genres { get; set; }
 
         public MoviesDbContext(DbContextOptions<MoviesDbContext> options): base(options)
         {
@@ -18,6 +25,26 @@ namespace Movies.Data.DbContexts
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            // Define the relationship between the entities (one-to-many) 
+            modelBuilder.Entity<Movie>()
+                .HasOne(m => m.Director)
+                .WithMany(p => p.MoviesAsDirector);
+
+            // Define the relationship between the entities (many-to-many)
+            modelBuilder.Entity<Movie>()
+                .HasMany(m => m.Actors)
+                .WithMany(p => p.MoviesAsActor)
+                .UsingEntity(j => j.ToTable("MovieActors"));
+
+            // Ca
+            IEnumerable<IMutableForeignKey> cascadeFKs = modelBuilder.Model.GetEntityTypes()
+              .SelectMany(type => type.GetForeignKeys())
+              .Where(foreignKey => !foreignKey.IsOwnership && foreignKey.DeleteBehavior == DeleteBehavior.Cascade);
+
+            // Change the delete behavior of the foreign keys to restrict
+            foreach (IMutableForeignKey foreignKey in cascadeFKs)
+                foreignKey.DeleteBehavior = DeleteBehavior.Restrict;
 
             // 
             AddTestingData(modelBuilder);
@@ -78,6 +105,15 @@ namespace Movies.Data.DbContexts
                     Role = PersonRole.Actor
                 }
             );
+
+            // Add genres to the database
+            modelBuilder.Entity<Genre>().HasData(
+            new Genre { GenreId = 1, Name = "sci-fi" },
+            new Genre { GenreId = 2, Name = "adventure" },
+            new Genre { GenreId = 3, Name = "action" },
+            new Genre { GenreId = 4, Name = "romantic" },
+            new Genre { GenreId = 5, Name = "animated" },
+            new Genre { GenreId = 6, Name = "comedy" });
         }
     }
 }

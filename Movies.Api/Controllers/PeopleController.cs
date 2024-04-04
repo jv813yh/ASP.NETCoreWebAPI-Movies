@@ -101,13 +101,24 @@ namespace Movies.Api.Controllers
             return Ok(listActors);
         }
 
+        /// <summary>
+        /// Async method to add a person to the database and return it as a PersonDTO object on route /api/people
+        /// </summary>
+        /// <param name="personDTO"></param>
+        /// <returns></returns>
         [HttpPost("people")]
-        public async Task<ActionResult<PersonDTO>> AddNewPerson([FromBody] PersonDTO personDTO)
+        public async Task<ActionResult<PersonDTO>> AddNewPersonAsync([FromBody] PersonDTO personDTO)
         {
             PersonDTO newPerson = await _personManager.AddPersonAsync(personDTO);
 
             return CreatedAtAction(nameof(GetPersonById), new { _id = newPerson.PersonId }, newPerson);
         }
+
+        /// <summary>
+        /// Async method to delete a person by id from the database and return it as a PersonDTO object on route /api/people/{_id}
+        /// </summary>
+        /// <param name="_id"></param>
+        /// <returns></returns>
 
         [HttpDelete("people/{_id}")]
         public async Task<ActionResult<PersonDTO>> DeletePerson(uint _id)
@@ -122,6 +133,13 @@ namespace Movies.Api.Controllers
             return Ok(person);
         }
 
+
+        /// <summary>
+        /// Async method to update a person by id from the database and return it as a PersonDTO object on route /api/people/{_id}
+        /// </summary>
+        /// <param name="_id"></param>
+        /// <param name="personDTO"></param>
+        /// <returns></returns>
         [HttpPut("people/{_id}")]
         public async Task<ActionResult<PersonDTO>> UpdatePerson(uint _id, [FromBody] PersonDTO personDTO)
         {

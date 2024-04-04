@@ -50,6 +50,8 @@ options.SwaggerDoc("movies", new OpenApiInfo
 
 // Add the repositories to the services collection
 builder.Services.AddScoped<IPersonRepository, PersonRepository>();
+builder.Services.AddScoped<IMovieRepository, MovieRepository>();
+builder.Services.AddScoped<IGenreRepository, GenreRepository>();
 
 // Add the AutoMapper to the services collection
 builder.Services.AddAutoMapper(typeof(AutoMapperConfigurationProfile));
@@ -57,7 +59,6 @@ builder.Services.AddAutoMapper(typeof(AutoMapperConfigurationProfile));
 
 // Add the managers to the services collection
 builder.Services.AddScoped<IPersonManager, PersonManager>();
-
 
 // Build the application
 var app = builder.Build();
