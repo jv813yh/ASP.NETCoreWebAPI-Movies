@@ -17,5 +17,8 @@ namespace Movies.Data.Repositories
             .Skip(page * pageSize)
             .Take(pageSize)
             .ToListAsync();
+
+        public IList<Person> GetPersonsByIds(IEnumerable<uint> personIds)
+         => _dbSet.Where(p => personIds.Contains(p.PersonId)).ToList();
     }
 }

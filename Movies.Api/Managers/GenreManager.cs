@@ -15,6 +15,7 @@ namespace Movies.Api.Managers
             _mapper = mapper;
         }
 
+        // This method returns a list of all genres
         public IList<string> GetAllGenres()
          => _mapper.Map<IList<string>>(_genreRepository.GetAll());
     }

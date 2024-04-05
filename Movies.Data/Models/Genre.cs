@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Movies.Data.Models
 {
+    // Genre entity with data annotations for the database schema and relationships
     [Index(nameof(Name), IsUnique = true)]
     public class Genre
     {
@@ -12,6 +13,7 @@ namespace Movies.Data.Models
 
         [Required, MinLength(3)]
         public string Name { get; set; } = string.Empty;
+
 
         // Navigation property for the many-to-many relationship between Genre and Movie
         public virtual List<Movie> Movies { get; set; } = new List<Movie>();

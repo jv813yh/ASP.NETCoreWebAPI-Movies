@@ -21,7 +21,7 @@ namespace Movies.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("people")]
-        public async Task<ActionResult<IList<PersonDTO>>> GetAllPeopleAsync()
+        public async Task<ActionResult> GetAllPeopleAsync()
         {
             IList<PersonDTO>? listPerons =  await _personManager.GetAllPeopleAsync();
 
@@ -58,7 +58,7 @@ namespace Movies.Api.Controllers
         /// <param name="limit"></param>
         ///// <returns></returns>
         [HttpGet("actors")]
-        public async Task<ActionResult<IList<PersonDTO>>> GetActorsAsync(int limit = int.MaxValue)
+        public async Task<ActionResult> GetActorsAsync(int limit = int.MaxValue)
         {
             IList<PersonDTO>? listActors = await _personManager.GetAllPeopleAsync(PersonRole.Actor, 0, limit);
 
@@ -71,7 +71,7 @@ namespace Movies.Api.Controllers
         }
 
         [HttpGet("people/{_id}")]
-        public ActionResult<PersonDTO> GetPersonById(uint _id)
+        public ActionResult GetPersonById(uint _id)
         {
             PersonDTO? person =  _personManager.GetPersonById(_id);
 
@@ -89,7 +89,7 @@ namespace Movies.Api.Controllers
         /// <param name="limit"></param>
         /// <returns></returns>
         [HttpGet("directors")]
-        public async Task<ActionResult<IList<PersonDTO>>> GetDirectorsAsync(int limit = int.MaxValue)
+        public async Task<ActionResult> GetDirectorsAsync(int limit = int.MaxValue)
         {
             IList<PersonDTO>? listActors = await _personManager.GetAllPeopleAsync(PersonRole.Director, 0, limit);
 
@@ -107,7 +107,7 @@ namespace Movies.Api.Controllers
         /// <param name="personDTO"></param>
         /// <returns></returns>
         [HttpPost("people")]
-        public async Task<ActionResult<PersonDTO>> AddNewPersonAsync([FromBody] PersonDTO personDTO)
+        public async Task<ActionResult> AddNewPersonAsync([FromBody] PersonDTO personDTO)
         {
             PersonDTO newPerson = await _personManager.AddPersonAsync(personDTO);
 
@@ -121,7 +121,7 @@ namespace Movies.Api.Controllers
         /// <returns></returns>
 
         [HttpDelete("people/{_id}")]
-        public async Task<ActionResult<PersonDTO>> DeletePerson(uint _id)
+        public async Task<ActionResult> DeletePerson(uint _id)
         {
             PersonDTO? person = await _personManager.DeletePersonAsync(_id);
 
@@ -141,7 +141,7 @@ namespace Movies.Api.Controllers
         /// <param name="personDTO"></param>
         /// <returns></returns>
         [HttpPut("people/{_id}")]
-        public async Task<ActionResult<PersonDTO>> UpdatePerson(uint _id, [FromBody] PersonDTO personDTO)
+        public async Task<ActionResult> UpdatePerson(uint _id, [FromBody] PersonDTO personDTO)
         {
             PersonDTO? updatedPerson = await _personManager.UpdatePersonAsync(_id, personDTO);
 

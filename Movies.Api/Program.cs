@@ -56,7 +56,6 @@ builder.Services.AddScoped<IGenreRepository, GenreRepository>();
 // Add the AutoMapper to the services collection
 builder.Services.AddAutoMapper(typeof(AutoMapperConfigurationProfile));
 
-
 // Add the managers to the services collection
 builder.Services.AddScoped<IPersonManager, PersonManager>();
 builder.Services.AddScoped<IMovieManager, MovieManager>();

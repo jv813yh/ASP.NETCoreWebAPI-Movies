@@ -9,5 +9,8 @@ namespace Movies.Data.Repositories
         public GenreRepository(MoviesDbContext dbContext) : base(dbContext)
         {
         }
+
+        public IList<Genre> GetGenresByIds(IEnumerable<uint> genreIds)
+         => _dbSet.Where(g => genreIds.Contains(g.GenreId)).ToList();
     }
 }

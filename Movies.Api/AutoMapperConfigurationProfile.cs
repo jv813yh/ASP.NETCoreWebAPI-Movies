@@ -16,6 +16,14 @@ namespace Movies.Api
                 .ConstructUsing(genre => genre.Name);
 
 
+            CreateMap<Movie, MovieDTO>()
+                .ForMember(dto => dto.ActorsIds, opt => opt.MapFrom(movie => movie.Actors.Select(a => a.PersonId).ToList()));
+
+            CreateMap<MovieDTO, Movie>()
+                .ForMember(movie => movie.Actors, opt => opt.Ignore())
+                .ForMember(movie => movie.Genres, opt => opt.Ignore());
+
+            CreateMap<Movie, ExtendedMovieDTO>();
         }
     }
 }

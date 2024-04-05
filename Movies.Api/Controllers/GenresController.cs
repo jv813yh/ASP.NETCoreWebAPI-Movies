@@ -19,8 +19,15 @@ namespace Movies.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public IActionResult GetGenres()
+        public ActionResult GetGenres()
         {
+            IList<string>? genres = _genreManager.GetAllGenres();
+
+            if (genres == null)
+            {
+                return NotFound();
+            }
+
             return Ok(_genreManager.GetAllGenres());
         }
     }

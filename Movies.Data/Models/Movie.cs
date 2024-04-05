@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Movies.Data.Models
 {
+    // Movie entity class that represents the Movie table in the database
     public class Movie
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity), Key]
