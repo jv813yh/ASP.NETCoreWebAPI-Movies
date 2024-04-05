@@ -39,17 +39,17 @@ namespace Movies.Api.Controllers
         /// <param name="id"></param>
         /// <returns> PersonDTO </returns>
         //[HttpGet("people/{_id}")]
-        public async Task<ActionResult<PersonDTO>> GetPersonByIdAsync(uint _id)
-        {
-            PersonDTO? person = await _personManager.GetPersonByIdAsync(_id);
+        //public async Task<ActionResult<PersonDTO>> GetPersonByIdAsync(uint _id)
+        //{
+        //    PersonDTO? person = await _personManager.GetPersonByIdAsync(_id);
 
-            if (person == null)
-            {
-                return NotFound();
-            }
+        //    if (person == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return Ok(person);
-        }
+        //    return Ok(person);
+        //}
 
 
         /// <summary>

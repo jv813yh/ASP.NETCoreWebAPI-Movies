@@ -20,5 +20,7 @@
         bool ExistsWithId(uint id);
 
         TEntity? FindById(uint id);
+
+        IList<TEntity> GetAll();
     }
 }

@@ -59,20 +59,24 @@ builder.Services.AddAutoMapper(typeof(AutoMapperConfigurationProfile));
 
 // Add the managers to the services collection
 builder.Services.AddScoped<IPersonManager, PersonManager>();
+builder.Services.AddScoped<IMovieManager, MovieManager>();
+builder.Services.AddScoped<IGenreManager, GenreManager>();
 
 // Build the application
 var app = builder.Build();
 
-//
-if(app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI(options 
-        => options.SwaggerEndpoint("/swagger/movies/swagger.json", "Movies API - v1"));
-}
-
 // Endpoint routing is a middleware that maps the incoming HTTP requests to the endpoints
 app.MapControllers();
+
+//
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("movies/swagger.json", "Movies API - v1");
+    });
+}
 
 app.MapGet("/", () => "Welcome");
 

@@ -84,6 +84,9 @@ namespace Movies.Data.Repositories
         public async Task<IList<TEntity>> GetAllAsync()
             =>  await _dbSet.ToListAsync();
 
+        public IList<TEntity> GetAll()
+            => _dbSet.ToList();
+
         // Async method to insert new entity into the database with transaction
         // Returns the inserted entity
         public async Task<TEntity> InsertAsync(TEntity entity)

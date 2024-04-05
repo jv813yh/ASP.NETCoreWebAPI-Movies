@@ -3,7 +3,6 @@ using Movies.Api.DTOs;
 using Movies.Api.Interfaces;
 using Movies.Data.Interfaces;
 using Movies.Data.Models;
-using Movies.Data.Repositories;
 
 namespace Movies.Api.Managers
 {
@@ -90,15 +89,9 @@ namespace Movies.Api.Managers
         // Async method to update a person by id from the database and return it
         public async Task<PersonDTO?> UpdatePersonAsync(uint id, PersonDTO personDto)
         {
-            //Person? person = _personRepository.FindById(id);
-
-            //if (person == null)
-            //{
-            //    return null;
-            //}
 
             Person updatedPerson = _mapper.Map<Person>(personDto);
-           // updatedPerson.PersonId = id;
+            updatedPerson.PersonId = id;
             Person newsReturnPerson = await _personRepository.UpdateAsync(updatedPerson);
 
             return _mapper.Map<PersonDTO>(newsReturnPerson);
