@@ -7,7 +7,7 @@ namespace Movies.Api.DTOs
     public class MovieDTO
     {
         [JsonPropertyName("_id")]
-        public uint MovieId { get; set; }
+        public uint Id { get; set; }
 
         [JsonPropertyName("name")]
         public string Name { get; set; } = "";

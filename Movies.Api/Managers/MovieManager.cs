@@ -20,19 +20,46 @@ public class MovieManager : IMovieManager
         _mapper = mapper;
     }
 
-    // This method returns a list of all movies
-    public IList<MovieDTO> GetAllMovies()
+    // Method gets movie by id from the database and returns it as a ExtendedMovieDTO
+    public ExtendedMovieDTO? GetMovieById(uint id)
     {
-        // Getting all movies from the database
-        IList<Movie>? movies = _movieRepository.GetAll();
+        // Getting the movie from the database by its id
+        Movie? movie = _movieRepository.FindById(id);
 
-        // If there are no movies in the database, return an empty list
-        if(movies == null)
+        // Mapping the movie to a MovieDTO object and returning it
+        ExtendedMovieDTO extendedMovieDTO = _mapper.Map<ExtendedMovieDTO>(movie);
+
+        IList<Person> personList = _personRepository.GetPeopleByIds(extendedMovieDTO.ActorsIds);
+
+        extendedMovieDTO.Actors.AddRange(_mapper.Map<IList<PersonDTO>>(personList));
+
+        return extendedMovieDTO;
+    }
+
+    // 
+    public IList<MovieDTO>? ExecuteMovieFilter(MovieFilterDTO movieFilterDTO)
+    {
+        // Getting the movies from the database according to the filter
+        // or all movies if the filter is not used
+
+        IList<Movie>? movies = null;
+
+        if(HasFilterValues(movieFilterDTO))
         {
-            return new List<MovieDTO>();
+            movies = _movieRepository.GetMoviesByFilter(
+                       movieFilterDTO.DirectId,
+                       movieFilterDTO.ActorId,
+                       movieFilterDTO.Genre,
+                       movieFilterDTO.FromYear,
+                       movieFilterDTO.ToYear,
+                       movieFilterDTO.Limit);
+        }
+        else
+        {
+            movies = _movieRepository.GetAll();
         }
 
-        // Mapping the list of movies to a list of MovieDTO objects and returning it
+        // Mapping the movies to a list of MovieDTO objects and returning them
         return _mapper.Map<IList<MovieDTO>>(movies);
     }
 
@@ -56,4 +83,9 @@ public class MovieManager : IMovieManager
         // Mapping the created movie to a MovieDTO object and returning it
         return _mapper.Map<MovieDTO>(createdMovie);
     }
+
+    // Method to check if the filter has values
+    private bool HasFilterValues(MovieFilterDTO movieFilterDTO)
+        =>  movieFilterDTO.ActorId != 0 || movieFilterDTO.DirectId != 0 || movieFilterDTO.Genre != string.Empty ||
+                movieFilterDTO.FromYear != 0 || movieFilterDTO.ToYear != 0 || movieFilterDTO.Limit != 0;
 }
