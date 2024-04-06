@@ -6,6 +6,6 @@ namespace Movies.Data.Interfaces
     {
         Task<IList<Person>> GetAllPeopleAsync(PersonRole personRole, int page, int pageSize);
 
-        IList<Person> GetPersonsByIds(IEnumerable<uint> personIds);
+        IList<Person> GetPeopleByIds(IEnumerable<uint> personIds);
     }
 }

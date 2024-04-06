@@ -3,6 +3,7 @@ using Movies.Data.Models;
 
 namespace Movies.Api.Interfaces
 {
+    // Interface for the PersonManager class
     public interface IPersonManager
     {
         // Async method to get all people from the database and return them

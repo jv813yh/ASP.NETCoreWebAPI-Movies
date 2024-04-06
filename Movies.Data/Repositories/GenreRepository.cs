@@ -10,7 +10,10 @@ namespace Movies.Data.Repositories
         {
         }
 
-        public IList<Genre> GetGenresByIds(IEnumerable<uint> genreIds)
-         => _dbSet.Where(g => genreIds.Contains(g.GenreId)).ToList();
+        // Method to get all genres from the database according the genre name, 
+        // It is used for mapping between the MovieDTO and the Movie
+        public IList<Genre> GetGenresByName(IEnumerable<string> names)
+         => _dbSet.Where(g => names.Contains(g.Name)).ToList();
+    
     }
 }

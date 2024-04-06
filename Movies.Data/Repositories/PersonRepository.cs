@@ -18,7 +18,10 @@ namespace Movies.Data.Repositories
             .Take(pageSize)
             .ToListAsync();
 
-        public IList<Person> GetPersonsByIds(IEnumerable<uint> personIds)
+
+        // Method to get all people from the database according the personID
+        // It is used fro mapping between the MovieDTO and the Movie
+        public IList<Person> GetPeopleByIds(IEnumerable<uint> personIds)
          => _dbSet.Where(p => personIds.Contains(p.PersonId)).ToList();
     }
 }
