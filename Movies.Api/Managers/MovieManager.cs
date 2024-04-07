@@ -80,23 +80,76 @@ public class MovieManager : IMovieManager
         return _mapper.Map<MovieDTO>(createdMovie);
     }
 
+    // This method updates a movie by id in the database and returns it as a MovieDTO
+    public async Task<MovieDTO?> UpdateMovie(uint id, MovieDTO updateMovieDTO)
+    {
+        Movie? movieUpdated = _movieRepository.FindById(id);
+
+        // Check if the movie with the given id exists in the database
+        if(null == movieUpdated)
+        {
+            return null;
+        }
+
+        // Mapping the MovieDTO object to a Movie object
+        _mapper.Map<MovieDTO, Movie>(updateMovieDTO, movieUpdated);
+
+        // Setting the Id and DateAdded properties of the movie
+        movieUpdated.Id = id;
+        movieUpdated.DateAdded = DateTime.UtcNow;
+
+        // Getting the actors and genres from the database 
+        IEnumerable<Person> Actors = _personRepository.GetPeopleByIds(updateMovieDTO.ActorsIds);
+        IEnumerable<Genre> Genres = _genreRepository.GetGenresByName(updateMovieDTO.Genres);
+
+        // Removing the actors that are not in the updateMovieDTO
+        foreach(Person person in movieUpdated.Actors.Except(Actors))
+        {
+            movieUpdated.Actors.Remove(person);
+        }
+        
+        // Removing the genres that are not in the updateMovieDTO
+        foreach(Genre genre in movieUpdated.Genres.Except(Genres))
+        {
+            movieUpdated.Genres.Remove(genre);
+        }
+
+        // Adding the actors and genres that are in the updateMovieDTO
+        // except the ones that are already in the movie !!!
+        movieUpdated.Actors.AddRange(Actors.Except(movieUpdated.Actors));
+        movieUpdated.Genres.AddRange(Genres.Except(movieUpdated.Genres));
+
+        // Async updating the movie in the database
+        Movie newUpdatedMovie = await _movieRepository.UpdateAsync(movieUpdated);
+
+        return _mapper.Map<MovieDTO>(newUpdatedMovie);
+    }
+
+    // This method deletes a movie by id from the database and returns it as a MovieDTO
     public async Task<MovieDTO?> DeleteMovie(uint id)
     {
-       if(!_movieRepository.ExistsWithId(id))
-       {
-              return null;
-       }
+        // Mehod ExistsWithId checks if the movie with the given id exists in the database
+        // and also changes the state of the entity to Detached to avoid problems with
+        // tracking multiple entities with the same ID
+        if(!_movieRepository.ExistsWithId(id))
+        {
+            return null;
+        }
 
-       Movie? movie = _movieRepository.FindById(id);
+        Movie? movie = _movieRepository.FindById(id);
 
-       MovieDTO deletedMovieDTO = _mapper.Map<MovieDTO>(movie);
+        MovieDTO deletedMovieDTO = _mapper.Map<MovieDTO>(movie);
 
-       movie.Actors.Clear();
-       movie.Genres.Clear();
+        // Cancels all links between these entities. Entity Framework would
+        // otherwise because of these bindings
+        // was unable to remove the Person
+        movie.Actors.Clear();
+        movie.Genres.Clear();
 
-       await _movieRepository.DeleteAsync(id);
+        // Async deleting the movie from the database
+        await _movieRepository.DeleteAsync(id);
 
-       return deletedMovieDTO;
+        return deletedMovieDTO;
     }
 
     // Method to check if the filter has values

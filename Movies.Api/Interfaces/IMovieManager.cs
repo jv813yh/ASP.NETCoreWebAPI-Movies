@@ -1,5 +1,4 @@
 ﻿using Movies.Api.DTOs;
-using Movies.Data.Models;
 
 // Interface for the MovieManager class
 public interface IMovieManager
@@ -12,6 +11,9 @@ public interface IMovieManager
 
     // This method adds a new movie to the database and returns it as a MovieDTO
     Task<MovieDTO> AddMovieAsync(MovieDTO movieDTO);
+
+    // This method updates a movie by id in the database and returns it as a MovieDTO
+    Task<MovieDTO?> UpdateMovie(uint id, MovieDTO updateMovieDTO);
 
     // This method deletes a movie by id from the database and returns it as a MovieDTO
     Task<MovieDTO?> DeleteMovie(uint id);

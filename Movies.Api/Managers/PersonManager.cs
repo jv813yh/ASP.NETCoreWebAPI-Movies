@@ -74,13 +74,24 @@ namespace Movies.Api.Managers
         // Async method to delete a person by id from the database and return it
         public async Task<PersonDTO?> DeletePersonAsync(uint id)
         {
-            if(!_personRepository.ExistsWithId(id))
+            // Mehod ExistsWithId checks if the person with the given id exists in the database
+            // and also changes the state of the entity to Detached to avoid problems with
+            // tracking multiple entities with the same ID
+            if (!_personRepository.ExistsWithId(id))
             {
                return null;
             }
 
+            // Find the person by its id
             Person? person = _personRepository.FindById(id);
 
+            // Cancels all links between these entities. Entity Framework would
+            // otherwise because of these bindings
+            // was unable to remove the Person
+            person.MoviesAsActor.Clear();
+            person.MoviesAsDirector.Clear();
+
+            // Async method to delete the person from the database
             await _personRepository.DeleteAsync(id);
 
             return _mapper.Map<PersonDTO>(person);

@@ -44,6 +44,22 @@ namespace Movies.Api.Controllers
             return Ok(movies);
         }
 
+        // Async method to update a movie by id in the database and return it as a MovieDTO
+        [HttpPut("{_id}")]
+        public async Task<ActionResult> UpdateMovie(uint _id, [FromBody] MovieDTO updateMovieDTO)
+        {
+            // Async update the movie in the database and get the updated movie as a MovieDTO
+            MovieDTO? updatedMovie = await _movieManager.UpdateMovie(_id, updateMovieDTO);
+
+            // If the movie is not found, return NotFound
+            if(updatedMovie == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(updatedMovie);
+        }
+
 
         /// <summary>
         /// Method to get a movie by id from the database and return it as a MovieDTO
