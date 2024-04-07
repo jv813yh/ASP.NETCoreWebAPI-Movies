@@ -27,12 +27,14 @@ namespace Movies.Data.DbContexts
             base.OnModelCreating(modelBuilder);
 
             // Define the relationship between the entities (one-to-many) 
-            modelBuilder.Entity<Movie>()
+            modelBuilder
+                .Entity<Movie>()
                 .HasOne(m => m.Director)
                 .WithMany(p => p.MoviesAsDirector);
 
             // Define the relationship between the entities (many-to-many)
-            modelBuilder.Entity<Movie>()
+            modelBuilder
+                .Entity<Movie>()
                 .HasMany(m => m.Actors)
                 .WithMany(p => p.MoviesAsActor)
                 .UsingEntity(j => j.ToTable("MovieActors"));
@@ -45,6 +47,7 @@ namespace Movies.Data.DbContexts
             // Change the delete behavior of the foreign keys to restrict
             foreach (IMutableForeignKey foreignKey in cascadeFKs)
                 foreignKey.DeleteBehavior = DeleteBehavior.Restrict;
+
 
             // 
             AddTestingData(modelBuilder);

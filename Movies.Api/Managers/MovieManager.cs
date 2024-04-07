@@ -29,10 +29,6 @@ public class MovieManager : IMovieManager
         // Mapping the movie to a MovieDTO object and returning it
         ExtendedMovieDTO extendedMovieDTO = _mapper.Map<ExtendedMovieDTO>(movie);
 
-        IList<Person> personList = _personRepository.GetPeopleByIds(extendedMovieDTO.ActorsIds);
-
-        extendedMovieDTO.Actors.AddRange(_mapper.Map<IList<PersonDTO>>(personList));
-
         return extendedMovieDTO;
     }
 
@@ -82,6 +78,25 @@ public class MovieManager : IMovieManager
 
         // Mapping the created movie to a MovieDTO object and returning it
         return _mapper.Map<MovieDTO>(createdMovie);
+    }
+
+    public async Task<MovieDTO?> DeleteMovie(uint id)
+    {
+       if(!_movieRepository.ExistsWithId(id))
+       {
+              return null;
+       }
+
+       Movie? movie = _movieRepository.FindById(id);
+
+       MovieDTO deletedMovieDTO = _mapper.Map<MovieDTO>(movie);
+
+       movie.Actors.Clear();
+       movie.Genres.Clear();
+
+       await _movieRepository.DeleteAsync(id);
+
+       return deletedMovieDTO;
     }
 
     // Method to check if the filter has values

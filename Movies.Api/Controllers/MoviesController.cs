@@ -63,5 +63,23 @@ namespace Movies.Api.Controllers
 
             return Ok(movie);
         }
+
+        /// <summary>
+        /// Async method to delete a movie by id from the database and return it as a MovieDTO
+        /// </summary>
+        /// <param name="_id"> movie id </param>
+        /// <returns> deleted movie as MovieDTO </returns>
+        [HttpDelete("{_id}")]
+        public async Task<ActionResult> DeleteMovie(uint _id)
+        {
+            MovieDTO? movieDTO = await _movieManager.DeleteMovie(_id);
+
+            if(movieDTO == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(movieDTO);
+        }
     }
 }

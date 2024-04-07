@@ -12,4 +12,7 @@ public interface IMovieManager
 
     // This method adds a new movie to the database and returns it as a MovieDTO
     Task<MovieDTO> AddMovieAsync(MovieDTO movieDTO);
+
+    // This method deletes a movie by id from the database and returns it as a MovieDTO
+    Task<MovieDTO?> DeleteMovie(uint id);
 }
