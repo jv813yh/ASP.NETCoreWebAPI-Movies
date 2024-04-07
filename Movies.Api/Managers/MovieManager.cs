@@ -43,7 +43,7 @@ public class MovieManager : IMovieManager
         if(HasFilterValues(movieFilterDTO))
         {
             movies = _movieRepository.GetMoviesByFilter(
-                       movieFilterDTO.DirectId,
+                       movieFilterDTO.DirectorId,
                        movieFilterDTO.ActorId,
                        movieFilterDTO.Genre,
                        movieFilterDTO.FromYear,
@@ -154,6 +154,6 @@ public class MovieManager : IMovieManager
 
     // Method to check if the filter has values
     private bool HasFilterValues(MovieFilterDTO movieFilterDTO)
-        =>  movieFilterDTO.ActorId != 0 || movieFilterDTO.DirectId != 0 || movieFilterDTO.Genre != string.Empty ||
+        =>  movieFilterDTO.ActorId != 0 || movieFilterDTO.DirectorId != 0 || movieFilterDTO.Genre != string.Empty ||
                 movieFilterDTO.FromYear != 0 || movieFilterDTO.ToYear != 0 || movieFilterDTO.Limit != 0;
 }

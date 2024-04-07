@@ -3,7 +3,7 @@
     // Data transfer object for filtering movies by director, actor, genre, year and limit
     public class MovieFilterDTO
     {
-        public uint DirectId { get; set; }
+        public uint DirectorId { get; set; }
         public uint ActorId { get; set; }
         public string Genre { get; set; } = "";
         public int FromYear { get; set; }
