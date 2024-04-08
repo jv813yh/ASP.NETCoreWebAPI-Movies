@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Movies.Api.DTOs;
-using System.Net.Sockets;
-using System.Runtime.InteropServices;
-using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
+
 
 namespace Movies.Api.Controllers
 {
@@ -31,7 +29,7 @@ namespace Movies.Api.Controllers
         /// <param name="authDto"></param>
         /// <returns></returns>
         [HttpPost("user")]
-        public async Task<ActionResult> RegisterUser(AuthDTO authDto)
+        public async Task<ActionResult> RegisterUserAsync(AuthDTO authDto)
         {
             // Create a new user with the email and username from the authDto
             IdentityUser newUser = new IdentityUser
@@ -41,7 +39,7 @@ namespace Movies.Api.Controllers
             };
 
             // Create the new user in the database and return the result
-            IdentityResult result = await _userManager.CreateAsync(newUser);
+            IdentityResult result = await _userManager.CreateAsync(newUser, authDto.Password);
 
             if (result.Succeeded)
             {
@@ -66,7 +64,7 @@ namespace Movies.Api.Controllers
         /// <param name="authDto"></param>
         /// <returns></returns>
         [HttpPost("auth")]
-        public async Task<ActionResult> LoginUser(AuthDTO authDto)
+        public async Task<ActionResult> LoginUserAsync(AuthDTO authDto)
         {
             // Find the user by email 
             IdentityUser? user = await _userManager.FindByEmailAsync(authDto.Email);
@@ -79,7 +77,7 @@ namespace Movies.Api.Controllers
             // Sign in the user with the email and password from the authDto
             // 3. parameter isPersistent: the user should stay logged in even after closing the browser
             // 4. parameter lockoutOnFailure: the user account should be locked after failed login
-            SignInResult result = await _signInManager.PasswordSignInAsync(authDto.Email, authDto.Password, true, false);
+            Microsoft.AspNetCore.Identity.SignInResult result = await _signInManager.PasswordSignInAsync(authDto.Email, authDto.Password, true, false);
 
             if (result.Succeeded)
             {
@@ -90,6 +88,41 @@ namespace Movies.Api.Controllers
             }
 
             return BadRequest("Invalid login attempt");
+        }
+
+        /// <summary>
+        /// Asynchronously logs out the user
+        /// </summary>
+        /// <returns></returns>
+        [HttpDelete("auth")]
+        public async Task<ActionResult> LogoutUserAsync()
+        {
+            await _signInManager.SignOutAsync();
+
+            // The client requires us that a successful response always contains one
+            // value, so I pass an empty object to the Ok() method
+            return Ok(new { });
+        }
+
+        /// <summary>
+        /// Asynchronously gets the current user
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("user")]
+        public async Task<ActionResult> GetCurrentUserAsync()
+        {
+            // Get the current user 
+            IdentityUser? user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return BadRequest("Invalid login attempt");
+            }
+
+            // Create a new user DTO
+            UserDTO userDto = ConvertToUserDto(user);
+
+            return Ok(userDto);
         }
 
         private UserDTO ConvertToUserDto(IdentityUser user)
