@@ -9,6 +9,7 @@ using Movies.Api.Managers;
 using System.Text.Json.Serialization;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Identity;
+using System.Reflection;
 
 
 // WebApplication creates instantiates,
@@ -95,4 +96,44 @@ app.UseAuthorization();
 
 app.MapGet("/", () => "Welcome");
 
+
+// 
+using(var scope = app.Services.CreateScope())
+{
+    // Get the RoleManager service from the service provider
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+    // Create all roles in the application using the RoleManager service
+    await CreateAllRoles(roleManager);
+}   
+
+// Run the application
 app.Run();
+
+
+
+// Create all roles in the application using the RoleManager service and the UserRoles class 
+// for string constants representing the roles and create the roles if they do not exist
+async Task CreateAllRoles(RoleManager<IdentityRole> roleManager)
+{
+    // Get all the constants from the UserRoles class
+    FieldInfo[] constants = typeof(UserRoles)
+        .GetFields(BindingFlags.Public | BindingFlags.Static)
+        .Where(fieldInfo => fieldInfo.IsLiteral
+            && !fieldInfo.IsInitOnly
+            && fieldInfo.FieldType == typeof(string))
+        .ToArray();
+
+    // Get all the roles from the constants
+    string[] roles = constants
+        .Select(fieldInfo => fieldInfo.GetRawConstantValue())
+        .OfType<string>()
+        .ToArray();
+
+    // Create the roles if they do not exist
+    foreach (var role in roles)
+    {
+        if (!await roleManager.RoleExistsAsync(role))
+            await roleManager.CreateAsync(new IdentityRole(role));
+    }
+}

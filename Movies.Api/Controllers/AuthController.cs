@@ -49,7 +49,7 @@ namespace Movies.Api.Controllers
                 if (user != null)
                 {
                     // Create a new user DTO
-                    UserDTO userDto = ConvertToUserDto(user);
+                    UserDTO userDto = await ConvertToUserDto(user);
 
                     return Ok(userDto);
                 }
@@ -82,7 +82,7 @@ namespace Movies.Api.Controllers
             if (result.Succeeded)
             {
                 // Create a new user DTO
-                UserDTO userDto = ConvertToUserDto(user);
+                UserDTO userDto = await ConvertToUserDto(user);
 
                 return Ok(userDto);
             }
@@ -95,7 +95,7 @@ namespace Movies.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpDelete("auth")]
-        public async Task<ActionResult> LogoutUserAsync()
+        public async Task<ActionResult> LogOutUserAsync()
         {
             await _signInManager.SignOutAsync();
 
@@ -120,14 +120,14 @@ namespace Movies.Api.Controllers
             }
 
             // Create a new user DTO
-            UserDTO userDto = ConvertToUserDto(user);
+            UserDTO userDto = await ConvertToUserDto(user);
 
             return Ok(userDto);
         }
 
-        private UserDTO ConvertToUserDto(IdentityUser user)
+        private async Task<UserDTO> ConvertToUserDto(IdentityUser user)
         {
-            bool isAdmin = false;
+            bool isAdmin = await _userManager.IsInRoleAsync(user, UserRoles.Admin.ToString());
 
             return new UserDTO
             {
