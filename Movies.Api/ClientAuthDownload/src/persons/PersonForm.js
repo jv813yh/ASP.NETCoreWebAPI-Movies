@@ -32,10 +32,23 @@ import InputCheck from "../components/InputCheck";
 import FlashMessage from "../components/FlashMessage";
 
 import Role from "./Role";
+import {useSession} from "../contexts/session";
 
 const PersonForm = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+    const {session} = useSession();
+    const isAdmin = session.data?.isAdmin === true;
+    const isLoadingSession = session.status === "loading";
+    useEffect(() => {
+        if (!isAdmin && !isLoadingSession) {
+            if (id) {
+                navigate("/people/show/" + id);
+            } else {
+                navigate("/people");
+            }
+        }
+    }, [isAdmin, isLoadingSession, id]);
 
   const [personNameState, setPersonName] = useState("");
   const [birthDateState, setBirthDate] = useState("");
@@ -82,6 +95,16 @@ const PersonForm = () => {
         setSuccess(false);
       });
   };
+
+    if (!isAdmin) {
+        return (
+            <div className="d-flex justify-content-center mt-2">
+                <div className="spinner-border spinner-border-sm" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        );
+    }
 
   const sent = sentState;
   const success = successState;

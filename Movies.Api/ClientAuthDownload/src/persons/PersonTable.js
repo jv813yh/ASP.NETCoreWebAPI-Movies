@@ -22,8 +22,11 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
+import {useSession} from "../contexts/session";
 
 const PersonTable = ({ label, items, link, deletePerson }) => {
+    const {session} = useSession();
+    const isAdmin = session.data?.isAdmin === true;
   return (
     <div>
       <p>
@@ -44,36 +47,40 @@ const PersonTable = ({ label, items, link, deletePerson }) => {
               <td>{index + 1}</td>
               <td>{item.name}</td>
               <td>
-                <div className="btn-group">
-                  <Link
-                    to={"/people/show/" + item._id}
-                    className="btn btn-sm btn-info"
-                  >
-                    Zobrazit
-                  </Link>
-                  <Link
-                    to={"/people/edit/" + item._id}
-                    className="btn btn-sm btn-warning"
-                  >
-                    Upravit
-                  </Link>
-                  <button
-                    onClick={() => deletePerson(item._id)}
-                    className="btn btn-sm btn-danger"
-                  >
-                    Odstranit
-                  </button>
-                </div>
+                  <div className="btn-group">
+                      <Link
+                          to={"/people/show/" + item._id}
+                          className="btn btn-sm btn-info"
+                      >
+                          Zobrazit
+                      </Link>
+                      {isAdmin ? (
+                          <Link
+                              to={"/people/edit/" + item._id}
+                              className="btn btn-sm btn-warning"
+                          >
+                              Upravit
+                          </Link>
+                      ) : null}
+                      {isAdmin ? (
+                          <button
+                              onClick={() => deletePerson(item._id)}
+                              className="btn btn-sm btn-danger"
+                          >
+                              Odstranit
+                          </button>
+                      ) : null}
+                  </div>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-      {link ? (
-        <Link to={"/people/create"} className="btn btn-success">
-          Nová osobnost
-        </Link>
-      ) : null}
+        {(link && isAdmin) ? (
+            <Link to={"/people/create"} className="btn btn-success">
+                Nová osobnost
+            </Link>
+        ) : null}
     </div>
   );
 };

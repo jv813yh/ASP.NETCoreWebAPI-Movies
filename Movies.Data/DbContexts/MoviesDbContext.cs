@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Movies.Data.Models;
 
 namespace Movies.Data.DbContexts
 {
-    public class MoviesDbContext : DbContext
+    public class MoviesDbContext : IdentityDbContext
     {
         // DbSet for the Person entity
         DbSet<Person> People { get; set; }

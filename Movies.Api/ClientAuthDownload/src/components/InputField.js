@@ -2,7 +2,7 @@ import React from "react";
 
 export function InputField(props) {
   // podporované typy pro element input
-  const INPUTS = ["text", "number", "date"];
+  const INPUTS = ["text", "number", "date", "password", "email"];
 
   // validace elementu a typu
   const type = props.type.toLowerCase();
@@ -16,7 +16,7 @@ export function InputField(props) {
   // přiřazení hodnoty minima do atributu příslušného typu
   const minProp = props.min || null;
   const min = ["number", "date"].includes(type) ? minProp : null;
-  const minlength = ["text", "textarea"].includes(type) ? minProp : null;
+  const minlength = ["text", "textarea", "password", "email"].includes(type) ? minProp : null;
 
   return (
     <div className="form-group">

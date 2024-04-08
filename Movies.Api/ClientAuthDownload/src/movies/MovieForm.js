@@ -31,10 +31,23 @@ import InputField from "../components/InputField"
 import { apiGet, apiPost, apiPut } from "../utils/api";
 
 import Genre from "./Genre";
+import {useSession} from "../contexts/session";
 
 const MovieForm = () => {
   // parametr url adresy (id filmu), stejně jako v detailu filmu
   const { id } = useParams();
+  const {session} = useSession();
+  const isAdmin = session.data?.isAdmin === true;
+  const isLoadingSession = session.status === "loading";
+  useEffect(() => {
+    if (!isAdmin && !isLoadingSession) {
+      if (id) {
+        navigate("/movies/show/" + id);
+      } else {
+        navigate("/movies");
+      }
+    }
+  }, [isAdmin, isLoadingSession, id]);
   const navigate = useNavigate();
   
   const [directorListState, setDirectorList] = useState([]);
@@ -130,6 +143,17 @@ const MovieForm = () => {
     apiGet("/api/actors").then((data) => setActorList(data));
     apiGet("/api/genres").then((data) => setGenreList(data));
   }, [id]);
+
+  if (!isAdmin) {
+    console.log(session, session.data?.isAdmin, isAdmin)
+    return (
+        <div className="d-flex justify-content-center mt-2">
+          <div className="spinner-border spinner-border-sm" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        </div>
+    );
+  }
 
   const sent = sentState;
   const success = successState;

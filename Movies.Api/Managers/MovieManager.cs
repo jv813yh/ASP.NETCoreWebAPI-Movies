@@ -37,7 +37,6 @@ public class MovieManager : IMovieManager
     {
         // Getting the movies from the database according to the filter
         // or all movies if the filter is not used
-
         IList<Movie>? movies = null;
 
         if(HasFilterValues(movieFilterDTO))

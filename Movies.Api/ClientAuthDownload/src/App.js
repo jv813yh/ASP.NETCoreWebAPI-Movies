@@ -36,24 +36,54 @@ import MovieDetail from "./movies/MovieDetail";
 import PersonDetail from "./persons/PersonDetail";
 import MovieForm from "./movies/MovieForm";
 import PersonForm from "./persons/PersonForm";
+import {RegistrationPage} from "./registration/RegistrationPage";
+import {useSession} from "./contexts/session";
+import {apiDelete} from "./utils/api";
+import {LoginPage} from "./login/LoginPage";
 
 export function App() {
+  const {session, setSession} = useSession();
+  const handleLogoutClick = () => {
+    apiDelete("/api/auth")
+        .finally(() => setSession({data: null, status: "unauthorized"}));
+  }
   return (
     <Router>
       <div className="container">
-        <nav className="navbar navbar-expand-lg navbar-light bg-light">
+        <nav className="navbar navbar-expand-lg navbar-light bg-light justify-content-between">
           <ul className="navbar-nav mr-auto">
             <li className="nav-item">
               <Link to={"/movies"} className="nav-link">
                 Filmy
               </Link>
             </li>
-
             <li className="nav-item">
               <Link to={"/people"} className="nav-link">
                 Osobnosti
               </Link>
             </li>
+          </ul>
+          <ul className="navbar-nav align-items-center gap-2">
+            {session.data ? <>
+              <li className="nav-item">{session.data.email}</li>
+              <li className="nav-item">
+                <button className="btn btn-sm btn-secondary" onClick={handleLogoutClick}>Odhlásit se</button>
+              </li>
+            </> : session.status === "loading" ?
+                <>
+                  <div className="spinner-border spinner-border-sm" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                  </div>
+                </>
+                :<>
+                  <li className="nav-item">
+                    <Link to={"/register"}>Registrace</Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link to={"/login"}>Přihlásit se</Link>
+                  </li>
+                </>
+            }
           </ul>
         </nav>
 
@@ -71,6 +101,8 @@ export function App() {
             <Route path="create" element={<PersonForm />} />
             <Route path="edit/:id" element={<PersonForm />} />
           </Route>
+          <Route path="/register" element={<RegistrationPage/>}/>
+          <Route path="/login" element={<LoginPage/>}/>
         </Routes>
       </div>
     </Router>

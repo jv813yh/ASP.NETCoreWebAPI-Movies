@@ -22,8 +22,11 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
+import {useSession} from "../contexts/session";
 
 const MovieTable = ({ label, items, deleteMovie }) => {
+    const {session} = useSession();
+    const isAdmin = session.data?.isAdmin === true;
   return (
     <div>
       <p>
@@ -43,36 +46,40 @@ const MovieTable = ({ label, items, deleteMovie }) => {
               <td>{index + 1}</td>
               <td>{item.name}</td>
               <td>
-                <div className="btn-group">
                   <div className="btn-group">
-                    <Link
-                      to={"/movies/show/" + item._id}
-                      className="btn btn-sm btn-info"
-                    >
-                      Zobrazit
-                    </Link>
-                    <Link
-                      to={"/movies/edit/" + item._id}
-                      className="btn btn-sm btn-warning"
-                    >
-                      Upravit
-                    </Link>
-                    <button
-                      onClick={() => deleteMovie(item._id)}
-                      className="btn btn-sm btn-danger"
-                    >
-                      Odstranit
-                    </button>
+                      <Link
+                          to={"/movies/show/" + item._id}
+                          className="btn btn-sm btn-info"
+                      >
+                          Zobrazit
+                      </Link>
+                      {isAdmin ? (
+                          <Link
+                              to={"/movies/edit/" + item._id}
+                              className="btn btn-sm btn-warning"
+                          >
+                              Upravit
+                          </Link>
+                      ) : null}
+                      {isAdmin ? (
+                          <button
+                              onClick={() => deleteMovie(item._id)}
+                              className="btn btn-sm btn-danger"
+                          >
+                              Odstranit
+                          </button>
+                      ) : null}
                   </div>
-                </div>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-      <Link to={"/movies/create"} className="btn btn-success">
-        Nový film
-      </Link>
+        {isAdmin ? (
+            <Link to={"/movies/create"} className="btn btn-success">
+                Nový film
+            </Link>
+        ) : null}
     </div>
   );
 };

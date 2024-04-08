@@ -8,6 +8,7 @@ using Movies.Api.Interfaces;
 using Movies.Api.Managers;
 using System.Text.Json.Serialization;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Identity;
 
 
 // WebApplication creates instantiates,
@@ -27,6 +28,17 @@ builder.Services.AddDbContext<MoviesDbContext>(options =>
     .UseLazyLoadingProxies()
     .ConfigureWarnings(warnings => warnings.Ignore(CoreEventId.DetachedLazyLoadingWarning));
 });
+
+// 
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+{
+    options.User.RequireUniqueEmail = true;
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequiredLength = 8;
+
+}).AddEntityFrameworkStores<MoviesDbContext>();
 
 
 // Add the controllers to the services collection and configure the JSON serializer to use string enums
@@ -67,7 +79,7 @@ var app = builder.Build();
 // Endpoint routing is a middleware that maps the incoming HTTP requests to the endpoints
 app.MapControllers();
 
-//
+// If the environment is development, use the Swagger UI
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -76,6 +88,10 @@ if (app.Environment.IsDevelopment())
         options.SwaggerEndpoint("movies/swagger.json", "Movies API - v1");
     });
 }
+
+// Use the authentication and authorization middleware
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapGet("/", () => "Welcome");
 

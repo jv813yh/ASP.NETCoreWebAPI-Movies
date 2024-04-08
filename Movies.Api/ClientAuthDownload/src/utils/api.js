@@ -23,13 +23,22 @@
 
 const API_URL = "";
 
+export class HttpRequestError extends Error {
+    constructor(response) {
+        super(`Network response was not ok: ${response.status} ${response.statusText}`);
+        this.response = response;
+    }
+}
+
 const fetchData = (url, requestOptions) => {
     const apiUrl = `${API_URL}${url}`;
 
-    return fetch(apiUrl, requestOptions)
+    const allRequestOptions = {credentials: "include", ...requestOptions};
+
+    return fetch(apiUrl, allRequestOptions)
         .then((response) => {
             if (!response.ok) {
-                throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`);
+                throw new HttpRequestError(response);
             }
             return response.json();
         })
