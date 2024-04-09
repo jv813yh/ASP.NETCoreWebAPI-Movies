@@ -18,6 +18,12 @@ namespace Movies.Data.Repositories
             .Take(pageSize)
             .ToListAsync();
 
+        public IList<Person> GetAllPeople(PersonRole personRole, int page, int pageSize)
+         => _dbSet.Where(p => p.Role == personRole)
+            .Skip(page * pageSize)
+            .Take(pageSize)
+            .ToList();
+
 
         // Method to get all people from the database according the personID
         // It is used fro mapping between the MovieDTO and the Movie

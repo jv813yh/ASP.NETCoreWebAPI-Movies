@@ -26,5 +26,9 @@ namespace Movies.Api.Interfaces
 
         // Async method to update a person by id from the database and return it
         Task<PersonDTO?> UpdatePersonAsync(uint id, PersonDTO personDto);
+
+        IList<PersonDTO> GetAllPeople(PersonRole personRole, int page = 0, int pageSize = int.MaxValue);
+
+        IList<PersonDTO> GetAllPeople();
     }
 }

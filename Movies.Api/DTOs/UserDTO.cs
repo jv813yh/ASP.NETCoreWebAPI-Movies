@@ -2,7 +2,7 @@
 
 namespace Movies.Api.DTOs
 {
-    // Class representing a user in the API 
+    // Class representing a user in the app
     public class UserDTO
     {
         [JsonPropertyName("_id")]

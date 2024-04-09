@@ -10,6 +10,7 @@ using System.Text.Json.Serialization;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Reflection;
+using Azure.Core;
 
 
 // WebApplication creates instantiates,
@@ -40,6 +41,28 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
     options.Password.RequiredLength = 8;
 
 }).AddEntityFrameworkStores<MoviesDbContext>();
+
+// 
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    // Method called when the request is sent
+    // to a secure endpoint by non - logged in
+    // by the user
+    options.Events.OnRedirectToLogin = context =>
+    {
+        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+        return Task.CompletedTask;
+    };
+
+    // Method called on dispatch
+    // a request for a secure endpoint by a user who does not have one
+    // sufficient authority
+    //options.Events.OnRedirectToAccessDenied = context =>
+    //{
+    //    context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+    //    return Task.CompletedTask;
+    //};
+});
 
 
 // Add the controllers to the services collection and configure the JSON serializer to use string enums
@@ -83,7 +106,10 @@ app.MapControllers();
 // If the environment is development, use the Swagger UI
 if (app.Environment.IsDevelopment())
 {
+    // Use the Swagger middleware
     app.UseSwagger();
+
+    // Use the Swagger UI with the Swagger endpoint
     app.UseSwaggerUI(options =>
     {
         options.SwaggerEndpoint("movies/swagger.json", "Movies API - v1");

@@ -27,6 +27,13 @@ namespace Movies.Api.Managers
             return _mapper.Map<IList<PersonDTO>>(peopleList);
         }
 
+        public IList<PersonDTO> GetAllPeople()
+        {
+            IList<Person> peopleList = _personRepository.GetAll();
+
+            return _mapper.Map<IList<PersonDTO>>(peopleList);
+        }
+
         // Async method to get a person by id from the database and return it
         public async Task<PersonDTO?> GetPersonByIdAsync(uint id)
         {
@@ -57,6 +64,13 @@ namespace Movies.Api.Managers
         public async Task<IList<PersonDTO>> GetAllPeopleAsync(PersonRole personRole, int page = 0, int pageSize = int.MaxValue)
         {
             IList<Person> peopleList = await _personRepository.GetAllPeopleAsync(personRole, page, pageSize);
+
+            return _mapper.Map<IList<PersonDTO>>(peopleList);
+        }
+
+        public IList<PersonDTO> GetAllPeople(PersonRole personRole, int page = 0, int pageSize = int.MaxValue)
+        {
+            IList<Person> peopleList =  _personRepository.GetAllPeople(personRole, page, pageSize);
 
             return _mapper.Map<IList<PersonDTO>>(peopleList);
         }

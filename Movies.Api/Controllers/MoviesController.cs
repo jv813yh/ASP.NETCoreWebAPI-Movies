@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Movies.Api.DTOs;
 
 namespace Movies.Api.Controllers
@@ -18,9 +19,11 @@ namespace Movies.Api.Controllers
 
         /// <summary>
         /// Async method that adds a new movie to the database and returns it
+        /// if the user is an admin
         /// </summary>
         /// <param name="movieDTO"></param>
         /// <returns> Task<ActionResult> </returns>
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpPost]
         public async Task<ActionResult> AddNewMovieAsync([FromBody] MovieDTO movieDTO)
         {
@@ -44,7 +47,8 @@ namespace Movies.Api.Controllers
             return Ok(movies);
         }
 
-        // Async method to update a movie by id in the database and return it as a MovieDTO
+        // Async method to update a movie by id in the database and return it as a MovieDTO, if the user is an admin
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpPut("{_id}")]
         public async Task<ActionResult> UpdateMovie(uint _id, [FromBody] MovieDTO updateMovieDTO)
         {
@@ -82,9 +86,11 @@ namespace Movies.Api.Controllers
 
         /// <summary>
         /// Async method to delete a movie by id from the database and return it as a MovieDTO
+        /// if the user is an admin
         /// </summary>
         /// <param name="_id"> movie id </param>
         /// <returns> deleted movie as MovieDTO </returns>
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpDelete("{_id}")]
         public async Task<ActionResult> DeleteMovie(uint _id)
         {

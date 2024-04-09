@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Movies.Api.DTOs;
 
@@ -54,7 +55,7 @@ namespace Movies.Api.Controllers
                     return Ok(userDto);
                 }
             }
-            
+
             return BadRequest(result.Errors);
         }
 
@@ -108,7 +109,8 @@ namespace Movies.Api.Controllers
         /// Asynchronously gets the current user
         /// </summary>
         /// <returns></returns>
-        [HttpGet("user")]
+        [Authorize]
+        [HttpGet("auth")]
         public async Task<ActionResult> GetCurrentUserAsync()
         {
             // Get the current user 
