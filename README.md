@@ -14,7 +14,6 @@ For the frontend part of the application, which is written in JavaScript, I have
 - **AutoMapper**: Used for object-to-object mapping.
 - **Repository Pattern**: Followed for a structured approach to data access.
 - **JSON Serialization**: Used for data serialization.
-- **Testing**: Conducted for ensuring functionality.
-- **Swagger**: Employed for API documentation.
+- **Swagger**: Employed for API documentation and testing for ensuring functionality.
 
 By leveraging these technologies and techniques, the project aims to provide a comprehensive movie database solution with robust backend functionality and a seamless user experience.
